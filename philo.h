@@ -6,7 +6,7 @@
 /*   By: tadiyamu <tadiyamu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/23 19:18:04 by tadiyamu          #+#    #+#             */
-/*   Updated: 2023/05/24 19:09:33 by tadiyamu         ###   ########.fr       */
+/*   Updated: 2023/05/24 20:48:01 by tadiyamu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,3 +57,39 @@ typedef struct s_data
 }			t_data;
 
 #endif
+
+/*
+# 5 800 200 200
+# no one should die
+# 5 600 150 150
+# no one should die
+# 4 410 200 200
+# no one should die
+# 100 800 200 200
+# no one should die
+# 105 800 200 200
+# no one should die
+# 200 800 200 200
+# no one should die
+
+# 1 800 200 200
+# a philo should die
+# 4 310 200 100
+# a philo should die
+# 4 200 205 200
+# a philo should die
+# 5 800 200 200 7
+# no one should die, simulation should stop after 7 eats
+# 4 410 200 200 10
+# no one should die, simulation should stop after 10 eats
+# -5 600 200 200
+# should error and not run (no crashing)
+# 4 -5 200 200
+# should error and not run (no crashing)
+# 4 600 -5 200
+# should error and not run (no crashing)
+# 4 600 200 -5
+# should error and not run (no crashing)
+# 4 600 200 200 -5
+# should error and not run (no crashing)
+*/

@@ -6,7 +6,7 @@
 /*   By: tadiyamu <tadiyamu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/23 21:05:34 by tadiyamu          #+#    #+#             */
-/*   Updated: 2023/05/24 20:15:01 by tadiyamu         ###   ########.fr       */
+/*   Updated: 2023/05/24 20:20:23 by tadiyamu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,8 +37,6 @@ void	*ft_loop_thread(void *arg)
 	state_time = now;
 	while (!data->config->stop_flag)
 	{
-		usleep(1000);
-		now += 1;
 		if (state == 1 && data != data->next
 			&& data->fork_data.fork && data->next->fork_data.fork)
 		{
@@ -98,6 +96,8 @@ void	*ft_loop_thread(void *arg)
 			printf("%lld %d %s", now, data->id, PHILO_DIE);
 			data->config->stop_flag = 1;
 		}
+		usleep(1000);
+		now += 1;
 	}
 	return (NULL);
 }
