@@ -6,7 +6,7 @@
 /*   By: tadiyamu <tadiyamu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/23 19:18:04 by tadiyamu          #+#    #+#             */
-/*   Updated: 2023/05/23 21:02:02 by tadiyamu         ###   ########.fr       */
+/*   Updated: 2023/05/24 19:09:33 by tadiyamu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,14 @@
 # include <stdlib.h>
 # include <pthread.h>
 # include <unistd.h>
+# include <string.h>
 # include <sys/time.h>
+
+# define PHILO_FORK " has taken fork\n"
+# define PHILO_EAT " is eating\n"
+# define PHILO_SLEEP " is sleeping\n"
+# define PHILO_THINK " is thinking\n"
+# define PHILO_DIE " died\n"
 
 /*
 States:
@@ -27,23 +34,26 @@ States:
 */
 typedef struct s_philo_config
 {
-	int				should_eat;
-	struct timeval	eat_duration;
-	struct timeval	die_duration;
-	struct timeval	sleep_duration;
+	int			stop_flag;
+	int			should_eat;
+	long long	eat_duration;
+	long long	die_duration;
+	long long	sleep_duration;
+	long long	now;
 }				t_philo_config;
 
 typedef struct s_forks_lock
 {
-	int				forks;
+	int				fork;
 	pthread_mutex_t	mutex;
 }			t_forks_lock;
 
 typedef struct s_data
 {
-	t_forks_lock	*forks;
+	t_forks_lock	fork_data;
 	int				id;
 	t_philo_config	*config;
+	struct s_data	*next;
 }			t_data;
 
 #endif
