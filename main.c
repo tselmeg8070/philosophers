@@ -6,13 +6,13 @@
 /*   By: tadiyamu <tadiyamu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/23 21:05:34 by tadiyamu          #+#    #+#             */
-/*   Updated: 2023/05/25 20:27:42 by tadiyamu         ###   ########.fr       */
+/*   Updated: 2023/05/25 21:19:02 by tadiyamu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-long long	ft_get_now(void)
+static long long	ft_get_now(void)
 {
 	struct timeval	tv;
 
@@ -20,132 +20,7 @@ long long	ft_get_now(void)
 	return ((long long) tv.tv_sec * 1000LL + (long long) tv.tv_usec / 1000LL);
 }
 
-int		ft_check_time_lock(int *arr, int n)
-{
-	while (--n >= 0)
-	{
-		if (arr[n] == 0)
-			return (0);
-	}
-	return (1);
-}
-
-void	*ft_loop_thread(void *arg)
-{
-	t_data		*data;
-	long long	state_time;
-	long long	die_time;
-	long long	now;
-	int			should_eat;
-	int			state;
-
-	state = 1;
-	data = (t_data *) arg;
-	now = data->config->now;
-	should_eat = data->config->should_eat;
-	die_time = now + data->config->die_duration;
-	state_time = now;
-	while (!data->config->stop_flag)
-	{
-		if (data->config->time_lock.now == now)
-		{
-			data->config->time_lock.n[data->id - 1] = 1;
-			if (ft_check_time_lock(data->config->time_lock.n, data->config->count))
-			{
-				pthread_mutex_lock(&data->config->time_lock.mutex);
-				memset(data->config->time_lock.n, 0, sizeof(int) * data->config->count);
-				data->config->time_lock.now++;
-				pthread_mutex_unlock(&data->config->time_lock.mutex);
-			}
-		}
-		else
-		{
-			if (state == 1 && data != data->next
-				&& data->fork_data.fork && data->next->fork_data.fork)
-			{
-				if (data->config->now == now && data->id % 2 == 1
-					&& (data->id != data->config->count))
-				{
-					pthread_mutex_lock(&data->fork_data.mutex);
-					pthread_mutex_lock(&data->next->fork_data.mutex);
-					data->fork_data.fork = 0;
-					data->next->fork_data.fork = 0;
-					pthread_mutex_unlock(&data->fork_data.mutex);
-					pthread_mutex_unlock(&data->next->fork_data.mutex);
-					die_time = now + data->config->die_duration;
-					state = 2;
-					state_time = now + data->config->eat_duration;
-					should_eat--;
-					printf("%lld %d %s", now, data->id, PHILO_EAT);
-				}
-				else if (data->config->now != now && data->fork_data.fork && data->next->fork_data.fork
-					&& now == data->next->fork_data.time)
-				{
-					pthread_mutex_lock(&data->fork_data.mutex);
-					pthread_mutex_lock(&data->next->fork_data.mutex);
-					data->fork_data.fork = 0;
-					data->next->fork_data.fork = 0;
-					pthread_mutex_unlock(&data->fork_data.mutex);
-					pthread_mutex_unlock(&data->next->fork_data.mutex);
-					die_time = now + data->config->die_duration;
-					state = 2;
-					state_time = now + data->config->eat_duration;
-					should_eat--;
-					printf("%lld %d %s", now, data->id, PHILO_EAT);
-				}
-			}
-			else if (state == 2 && now + 3 == state_time)
-			{
-				pthread_mutex_lock(&data->fork_data.mutex);
-				pthread_mutex_lock(&data->next->fork_data.mutex);
-				data->fork_data.fork = 1;
-				data->next->fork_data.fork = 1;
-				data->fork_data.time = now + 3;
-				data->next->fork_data.time = now + 3;
-				pthread_mutex_unlock(&data->fork_data.mutex);
-				pthread_mutex_unlock(&data->next->fork_data.mutex);
-				state = 3;
-				state_time = now + 3 + data->config->sleep_duration;
-				printf("%lld %d %s", now + 3, data->id, PHILO_SLEEP);
-			}
-			else if (state == 3 && now == state_time)
-			{
-				if (data->fork_data.fork && data->next->fork_data.fork
-					&& now == data->fork_data.time && now == data->next->fork_data.time)
-				{
-					pthread_mutex_lock(&data->fork_data.mutex);
-					pthread_mutex_lock(&data->next->fork_data.mutex);
-					data->fork_data.fork = 0;
-					data->next->fork_data.fork = 0;
-					pthread_mutex_unlock(&data->fork_data.mutex);
-					pthread_mutex_unlock(&data->next->fork_data.mutex);
-					die_time = now + data->config->die_duration;
-					state = 2;
-					state_time = now + data->config->eat_duration;
-					should_eat--;
-					printf("%lld %d %s", now, data->id, PHILO_EAT);
-				}
-				else
-				{
-					state = 1;
-					printf("%lld %d %s", now, data->id, PHILO_THINK);
-				}
-			}
-			if (should_eat != -1 && should_eat == 0)
-				data->config->stop_flag = 1;
-			if (die_time == now)
-			{
-				printf("%lld %d %s", now, data->id, PHILO_DIE);
-				data->config->stop_flag = 1;
-			}
-			now += 1;
-		}
-		usleep(1000);
-	}
-	return (NULL);
-}
-
-void	ft_init_thread_data(t_data *data, int n, t_philo_config *config)
+static void	ft_init_thread_data(t_data *data, int n, t_philo_config *config)
 {
 	int		i;
 
@@ -166,7 +41,7 @@ void	ft_init_thread_data(t_data *data, int n, t_philo_config *config)
 	}
 }
 
-int	ft_init_config(t_philo_config *config, int n)
+static int	ft_init_config(t_philo_config *config, int n)
 {
 	config->die_duration = 900;
 	config->eat_duration = 300;

@@ -6,7 +6,7 @@
 /*   By: tadiyamu <tadiyamu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/23 19:18:04 by tadiyamu          #+#    #+#             */
-/*   Updated: 2023/05/25 12:59:54 by tadiyamu         ###   ########.fr       */
+/*   Updated: 2023/05/25 21:44:22 by tadiyamu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,15 @@ typedef struct s_philo_config
 	t_time_lock	time_lock;
 }				t_philo_config;
 
+typedef struct s_thread_config
+{
+	long long	state_time;
+	long long	die_time;
+	long long	now;
+	int			should_eat;
+	int			state;
+}				t_thread_config;
+
 typedef struct s_forks_lock
 {
 	int				fork;
@@ -65,6 +74,24 @@ typedef struct s_data
 	t_philo_config	*config;
 	struct s_data	*next;
 }			t_data;
+
+void		*ft_loop_thread(void *arg);
+
+int			ft_eat_condition(t_data *data, t_thread_config *config);
+
+int			ft_sleep_condition(t_data *data, t_thread_config *config);
+
+void		ft_philo_eat(t_data *data, t_thread_config *config);
+
+void		ft_philo_sleep(t_data *data, t_thread_config *config);
+
+void		ft_philo_decide(t_data *data, t_thread_config *config);
+
+void		ft_philo_die(t_data *data, t_thread_config *config);
+
+int			ft_check_val(char *str, long long val);
+
+long long	ft_atoi(char *str);
 
 #endif
 
