@@ -6,7 +6,7 @@
 /*   By: tadiyamu <tadiyamu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/23 19:18:04 by tadiyamu          #+#    #+#             */
-/*   Updated: 2023/05/24 20:48:01 by tadiyamu         ###   ########.fr       */
+/*   Updated: 2023/05/25 12:59:54 by tadiyamu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,13 @@
 # define PHILO_THINK " is thinking\n"
 # define PHILO_DIE " died\n"
 
+typedef struct s_time_lock
+{
+	long long		now;
+	int				*n;
+	pthread_mutex_t	mutex;
+}			t_time_lock;
+
 /*
 States:
 	1 - thinking: which is idle mode
@@ -36,15 +43,18 @@ typedef struct s_philo_config
 {
 	int			stop_flag;
 	int			should_eat;
+	int			count;
 	long long	eat_duration;
 	long long	die_duration;
 	long long	sleep_duration;
 	long long	now;
+	t_time_lock	time_lock;
 }				t_philo_config;
 
 typedef struct s_forks_lock
 {
 	int				fork;
+	long long		time;
 	pthread_mutex_t	mutex;
 }			t_forks_lock;
 
