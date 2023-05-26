@@ -6,7 +6,7 @@
 /*   By: tadiyamu <tadiyamu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/25 21:10:12 by tadiyamu          #+#    #+#             */
-/*   Updated: 2023/05/26 19:26:27 by tadiyamu         ###   ########.fr       */
+/*   Updated: 2023/05/26 20:28:59 by tadiyamu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,31 +56,25 @@ void	ft_philo_die(t_data *data, t_thread_config *config)
 	int	i;
 	int	f;
 
-	if (config->die_time == config->now)
+	if (config->die_time == config->now
+		&& !pthread_mutex_lock(&data->config->mutex))
 	{
-		if (!pthread_mutex_lock(&data->config->mutex))
-		{
-			printf("%lld %d %s", config->now, data->id, PHILO_DIE);
-			data->config->stop_flag = 1;
-			pthread_mutex_unlock(&data->config->mutex);
-		}
-	}
-	if (config->should_eat == 0)
-	{
-		if (!pthread_mutex_lock(&data->config->mutex))
-		{
-			data->config->ate[data->id - 1] = 1;
-			pthread_mutex_unlock(&data->config->mutex);
-		}
-	}
-	i = 0;
-	f = 0;
-	while (i < data->config->count)
-	{
-		if (data->config->ate[i] == 0)
-			f = 1;
-		i++;
-	}
-	if (f == 0)
+		printf("%lld %d %s", config->now, data->id, PHILO_DIE);
 		data->config->stop_flag = 1;
+		pthread_mutex_unlock(&data->config->mutex);
+	}
+	if (config->should_eat == 0 && !pthread_mutex_lock(&data->config->mutex))
+	{
+		data->config->ate[data->id - 1] = 1;
+		i = -1;
+		f = 0;
+		while (++i < data->config->count)
+		{
+			if (data->config->ate[i] == 0)
+				f = 1;
+		}
+		if (f == 0)
+			data->config->stop_flag = 1;
+		pthread_mutex_unlock(&data->config->mutex);
+	}
 }
