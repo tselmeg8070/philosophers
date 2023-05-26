@@ -6,7 +6,7 @@
 /*   By: tadiyamu <tadiyamu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/25 21:10:12 by tadiyamu          #+#    #+#             */
-/*   Updated: 2023/05/25 21:19:36 by tadiyamu         ###   ########.fr       */
+/*   Updated: 2023/05/26 14:56:51 by tadiyamu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,6 @@ void	ft_philo_eat(t_data *data, t_thread_config *config)
 	config->die_time = config->now + data->config->die_duration;
 	config->state = 2;
 	config->state_time = config->now + data->config->eat_duration;
-	config->should_eat--;
 	printf("%lld %d %s", config->now, data->id, PHILO_EAT);
 }
 
@@ -39,6 +38,8 @@ void	ft_philo_sleep(t_data *data, t_thread_config *config)
 	pthread_mutex_unlock(&data->next->fork_data.mutex);
 	config->state = 3;
 	config->state_time = config->now + 3 + data->config->sleep_duration;
+	if (config->should_eat != -1 && config->should_eat != 0)
+		config->should_eat--;
 	printf("%lld %d %s", config->now + 3, data->id, PHILO_SLEEP);
 }
 
@@ -60,9 +61,24 @@ void	ft_philo_decide(t_data *data, t_thread_config *config)
 
 void	ft_philo_die(t_data *data, t_thread_config *config)
 {
+	int	i;
+	int	f;
+
 	if (config->die_time == config->now)
 	{
 		printf("%lld %d %s", config->now, data->id, PHILO_DIE);
 		data->config->stop_flag = 1;
 	}
+	if (config->should_eat == 0)
+		data->config->ate[data->id - 1] = 1;
+	i = 0;
+	f = 0;
+	while (i < data->config->count)
+	{
+		if (data->config->ate[i] == 0)
+			f = 1;
+		i++;
+	}
+	if (f == 0)
+		data->config->stop_flag = 1;
 }

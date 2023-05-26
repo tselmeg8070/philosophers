@@ -6,7 +6,7 @@
 /*   By: tadiyamu <tadiyamu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/25 21:11:27 by tadiyamu          #+#    #+#             */
-/*   Updated: 2023/05/25 21:16:46 by tadiyamu         ###   ########.fr       */
+/*   Updated: 2023/05/26 15:06:35 by tadiyamu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,7 @@ void	*ft_loop_thread(void *arg)
 		{
 			if (ft_eat_condition(data, &config))
 				ft_philo_eat(data, &config);
-			else if (ft_sleep_condition(data, &config))
+			else if (ft_sleep_condition(&config))
 				ft_philo_sleep(data, &config);
 			else
 				ft_philo_decide(data, &config);

@@ -6,7 +6,7 @@
 /*   By: tadiyamu <tadiyamu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/25 21:14:11 by tadiyamu          #+#    #+#             */
-/*   Updated: 2023/05/25 21:14:27 by tadiyamu         ###   ########.fr       */
+/*   Updated: 2023/05/26 15:06:29 by tadiyamu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ int	ft_eat_condition(t_data *data, t_thread_config *config)
 	return (0);
 }
 
-int	ft_sleep_condition(t_data *data, t_thread_config *config)
+int	ft_sleep_condition(t_thread_config *config)
 {
 	if (config->state == 2 && config->now + 3 == config->state_time)
 		return (1);

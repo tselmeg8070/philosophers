@@ -6,7 +6,7 @@
 /*   By: tadiyamu <tadiyamu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/23 21:05:34 by tadiyamu          #+#    #+#             */
-/*   Updated: 2023/05/25 21:19:02 by tadiyamu         ###   ########.fr       */
+/*   Updated: 2023/05/26 14:49:53 by tadiyamu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,49 +41,60 @@ static void	ft_init_thread_data(t_data *data, int n, t_philo_config *config)
 	}
 }
 
-static int	ft_init_config(t_philo_config *config, int n)
+static int	ft_init_config(t_philo_config *config, int argc, char **argv)
 {
-	config->die_duration = 900;
-	config->eat_duration = 300;
-	config->sleep_duration = 300;
-	config->should_eat = -1;
-	config->count = n;
-	config->now = ft_get_now();
-	config->stop_flag = 0;
-	config->time_lock.now = config->now;
-	config->time_lock.n = malloc(sizeof(int) * n);
-	if (config->time_lock.n == NULL)
-		return (0);
-	memset(config->time_lock.n, 0, sizeof(int) * n);
-	memset(&config->time_lock.mutex, 0, sizeof(pthread_mutex_t));
-	pthread_mutex_init(&config->time_lock.mutex, NULL);
-	return (1);
+	if (ft_philo_parse(argc, argv, config))
+	{
+		config->now = ft_get_now();
+		config->stop_flag = 0;
+		config->time_lock.now = config->now;
+		config->time_lock.n = malloc(sizeof(int) * config->count);
+		if (config->time_lock.n == NULL)
+			return (0);
+		config->ate = malloc(sizeof(int) * config->count);
+		if (config->ate == NULL)
+		{
+			free(config->time_lock.n);
+			return (0);
+		}
+		memset(config->ate, 0, sizeof(int) * config->count);
+		memset(config->time_lock.n, 0, sizeof(int) * config->count);
+		memset(&config->time_lock.mutex, 0, sizeof(pthread_mutex_t));
+		pthread_mutex_init(&config->time_lock.mutex, NULL);
+		return (1);
+	}
+	return (0);
 }
 
 int	main(int argc, char **argv)
 {
-	int				n = 5;
-	pthread_t		threads[n];
+	pthread_t		*threads;
 	t_philo_config	config;
-	t_data			data[n];
+	t_data			*data;
 	int				i;
 
-	if (!ft_init_config(&config, n))
+	if (!ft_init_config(&config, argc, argv))
 	{
-		write(2, "Memory error\n", 13);
+		write(2, "error\n", 6);
 		return (1);
 	}
-	ft_init_thread_data(data, n, &config);
+	data = malloc(sizeof(t_data) * config.count);
+	threads = malloc(sizeof(pthread_t) * config.count);
+	ft_init_thread_data(data, config.count, &config);
 	i = -1;
-	while (++i < n)
+	while (++i < config.count)
 		pthread_create(&threads[i], NULL, ft_loop_thread, &data[i]);
 	i = 0;
-	while (i < n)
+	while (i < config.count)
 	{
 		pthread_mutex_destroy(&data[i].fork_data.mutex);
 		pthread_join(threads[i], NULL);
 		i++;
 	}
 	pthread_mutex_destroy(&config.time_lock.mutex);
+	free(config.ate);
+	free(config.time_lock.n);
+	free(data);
+	free(threads);
 	return (0);
 }

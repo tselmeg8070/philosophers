@@ -6,18 +6,18 @@
 /*   By: tadiyamu <tadiyamu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/24 08:22:24 by tadiyamu          #+#    #+#             */
-/*   Updated: 2023/05/25 21:37:51 by tadiyamu         ###   ########.fr       */
+/*   Updated: 2023/05/26 14:59:24 by tadiyamu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-char	*strip_space(char *str)
+static char	*strip_space(char *str)
 {
 	while (*str == ' ' || (*str >= 9 && *str <= 16))
 		str++;
 	return (str);
 }
 
-long long	ft_int(int val, int sign_count)
+static long long	ft_int(int val, int sign_count)
 {
 	if (sign_count % 2 == 1)
 		return (val * (-1));

@@ -6,7 +6,7 @@
 /*   By: tadiyamu <tadiyamu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/25 21:40:40 by tadiyamu          #+#    #+#             */
-/*   Updated: 2023/05/25 21:44:46 by tadiyamu         ###   ########.fr       */
+/*   Updated: 2023/05/26 15:06:02 by tadiyamu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ int	ft_strncmp(unsigned char *s1, unsigned char *s2, unsigned int n)
 	return (*s1 - *s2);
 }
 
-size_t	ft_strlen(const char *str)
+size_t	ft_strlen(const unsigned char *str)
 {
 	size_t	c;
 
@@ -45,7 +45,8 @@ int	ft_check_val(char *str, long long val)
 	dig = 0;
 	if (val < 0)
 		dig++;
-	if (val == 0 && ft_strncmp(str, "0", 1) != 0)
+	if (val == 0
+		&& ft_strncmp((unsigned char*) str, (unsigned char*) "0", 1) != 0)
 		return (0);
 	if (val == 0)
 		dig = 1;
@@ -54,7 +55,7 @@ int	ft_check_val(char *str, long long val)
 		dig++;
 		val /= 10;
 	}
-	if (dig == (int) ft_strlen(str))
+	if (dig == (int) ft_strlen((unsigned char*) str))
 		return (1);
 	return (0);
 }

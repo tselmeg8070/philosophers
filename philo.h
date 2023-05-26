@@ -6,7 +6,7 @@
 /*   By: tadiyamu <tadiyamu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/23 19:18:04 by tadiyamu          #+#    #+#             */
-/*   Updated: 2023/05/25 21:44:22 by tadiyamu         ###   ########.fr       */
+/*   Updated: 2023/05/26 15:06:45 by tadiyamu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,7 @@ typedef struct s_philo_config
 	int			stop_flag;
 	int			should_eat;
 	int			count;
+	int			*ate;
 	long long	eat_duration;
 	long long	die_duration;
 	long long	sleep_duration;
@@ -79,7 +80,7 @@ void		*ft_loop_thread(void *arg);
 
 int			ft_eat_condition(t_data *data, t_thread_config *config);
 
-int			ft_sleep_condition(t_data *data, t_thread_config *config);
+int			ft_sleep_condition(t_thread_config *config);
 
 void		ft_philo_eat(t_data *data, t_thread_config *config);
 
@@ -92,6 +93,8 @@ void		ft_philo_die(t_data *data, t_thread_config *config);
 int			ft_check_val(char *str, long long val);
 
 long long	ft_atoi(char *str);
+
+int			ft_philo_parse(int argc, char **argv, t_philo_config *config);
 
 #endif
 
