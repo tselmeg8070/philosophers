@@ -6,7 +6,7 @@
 /*   By: tadiyamu <tadiyamu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/25 21:10:12 by tadiyamu          #+#    #+#             */
-/*   Updated: 2023/05/26 14:56:51 by tadiyamu         ###   ########.fr       */
+/*   Updated: 2023/05/26 19:26:27 by tadiyamu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,12 +14,8 @@
 
 void	ft_philo_eat(t_data *data, t_thread_config *config)
 {
-	pthread_mutex_lock(&data->fork_data.mutex);
-	pthread_mutex_lock(&data->next->fork_data.mutex);
 	data->fork_data.fork = 0;
 	data->next->fork_data.fork = 0;
-	pthread_mutex_unlock(&data->fork_data.mutex);
-	pthread_mutex_unlock(&data->next->fork_data.mutex);
 	config->die_time = config->now + data->config->die_duration;
 	config->state = 2;
 	config->state_time = config->now + data->config->eat_duration;
@@ -28,14 +24,10 @@ void	ft_philo_eat(t_data *data, t_thread_config *config)
 
 void	ft_philo_sleep(t_data *data, t_thread_config *config)
 {
-	pthread_mutex_lock(&data->fork_data.mutex);
-	pthread_mutex_lock(&data->next->fork_data.mutex);
 	data->fork_data.fork = 1;
-	data->next->fork_data.fork = 1;
 	data->fork_data.time = config->now + 3;
+	data->next->fork_data.fork = 1;
 	data->next->fork_data.time = config->now + 3;
-	pthread_mutex_unlock(&data->fork_data.mutex);
-	pthread_mutex_unlock(&data->next->fork_data.mutex);
 	config->state = 3;
 	config->state_time = config->now + 3 + data->config->sleep_duration;
 	if (config->should_eat != -1 && config->should_eat != 0)
@@ -66,11 +58,21 @@ void	ft_philo_die(t_data *data, t_thread_config *config)
 
 	if (config->die_time == config->now)
 	{
-		printf("%lld %d %s", config->now, data->id, PHILO_DIE);
-		data->config->stop_flag = 1;
+		if (!pthread_mutex_lock(&data->config->mutex))
+		{
+			printf("%lld %d %s", config->now, data->id, PHILO_DIE);
+			data->config->stop_flag = 1;
+			pthread_mutex_unlock(&data->config->mutex);
+		}
 	}
 	if (config->should_eat == 0)
-		data->config->ate[data->id - 1] = 1;
+	{
+		if (!pthread_mutex_lock(&data->config->mutex))
+		{
+			data->config->ate[data->id - 1] = 1;
+			pthread_mutex_unlock(&data->config->mutex);
+		}
+	}
 	i = 0;
 	f = 0;
 	while (i < data->config->count)

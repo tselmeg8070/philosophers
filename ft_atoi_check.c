@@ -6,7 +6,7 @@
 /*   By: tadiyamu <tadiyamu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/25 21:40:40 by tadiyamu          #+#    #+#             */
-/*   Updated: 2023/05/26 15:06:02 by tadiyamu         ###   ########.fr       */
+/*   Updated: 2023/05/26 17:12:38 by tadiyamu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ int	ft_check_val(char *str, long long val)
 		dig++;
 		val /= 10;
 	}
-	if (dig == (int) ft_strlen((unsigned char*) str))
+	if (dig == (int) ft_strlen((unsigned char *) str))
 		return (1);
 	return (0);
 }

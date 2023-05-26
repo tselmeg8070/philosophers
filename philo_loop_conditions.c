@@ -6,7 +6,7 @@
 /*   By: tadiyamu <tadiyamu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/25 21:14:11 by tadiyamu          #+#    #+#             */
-/*   Updated: 2023/05/26 15:06:29 by tadiyamu         ###   ########.fr       */
+/*   Updated: 2023/05/26 18:52:26 by tadiyamu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,8 +20,7 @@ int	ft_eat_condition(t_data *data, t_thread_config *config)
 		if (data->config->now == config->now && data->id % 2 == 1
 			&& (data->id != data->config->count))
 			return (1);
-		else if (data->config->now != config->now && data->fork_data.fork
-			&& data->next->fork_data.fork
+		else if (data->config->now != config->now
 			&& config->now == data->next->fork_data.time)
 			return (1);
 	}

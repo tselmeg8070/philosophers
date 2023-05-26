@@ -6,7 +6,7 @@
 /*   By: tadiyamu <tadiyamu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/25 21:11:27 by tadiyamu          #+#    #+#             */
-/*   Updated: 2023/05/26 19:15:03 by tadiyamu         ###   ########.fr       */
+/*   Updated: 2023/05/26 18:55:41 by tadiyamu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,12 +63,16 @@ void	*ft_loop_thread(void *arg)
 	{
 		if (ft_time_lock(data, &config))
 		{
+			pthread_mutex_lock(&data->fork_data.mutex);
+			pthread_mutex_lock(&data->next->fork_data.mutex);
 			if (ft_eat_condition(data, &config))
 				ft_philo_eat(data, &config);
 			else if (ft_sleep_condition(&config))
 				ft_philo_sleep(data, &config);
 			else
 				ft_philo_decide(data, &config);
+			pthread_mutex_unlock(&data->fork_data.mutex);
+			pthread_mutex_unlock(&data->next->fork_data.mutex);
 			ft_philo_die(data, &config);
 			config.now += 1;
 		}

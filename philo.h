@@ -6,7 +6,7 @@
 /*   By: tadiyamu <tadiyamu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/23 19:18:04 by tadiyamu          #+#    #+#             */
-/*   Updated: 2023/05/26 15:06:45 by tadiyamu         ###   ########.fr       */
+/*   Updated: 2023/05/26 17:17:26 by tadiyamu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,15 +41,16 @@ States:
 */
 typedef struct s_philo_config
 {
-	int			stop_flag;
-	int			should_eat;
-	int			count;
-	int			*ate;
-	long long	eat_duration;
-	long long	die_duration;
-	long long	sleep_duration;
-	long long	now;
-	t_time_lock	time_lock;
+	int				stop_flag;
+	int				should_eat;
+	int				count;
+	pthread_mutex_t	mutex;
+	int				*ate;
+	long long		eat_duration;
+	long long		die_duration;
+	long long		sleep_duration;
+	long long		now;
+	t_time_lock		time_lock;
 }				t_philo_config;
 
 typedef struct s_thread_config

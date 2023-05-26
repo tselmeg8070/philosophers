@@ -6,7 +6,7 @@
 /*   By: tadiyamu <tadiyamu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/23 21:05:34 by tadiyamu          #+#    #+#             */
-/*   Updated: 2023/05/26 14:49:53 by tadiyamu         ###   ########.fr       */
+/*   Updated: 2023/05/26 17:18:53 by tadiyamu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,9 @@ static int	ft_init_config(t_philo_config *config, int argc, char **argv)
 		memset(config->ate, 0, sizeof(int) * config->count);
 		memset(config->time_lock.n, 0, sizeof(int) * config->count);
 		memset(&config->time_lock.mutex, 0, sizeof(pthread_mutex_t));
+		memset(&config->mutex, 0, sizeof(pthread_mutex_t));
 		pthread_mutex_init(&config->time_lock.mutex, NULL);
+		pthread_mutex_init(&config->mutex, NULL);
 		return (1);
 	}
 	return (0);
@@ -84,14 +86,14 @@ int	main(int argc, char **argv)
 	i = -1;
 	while (++i < config.count)
 		pthread_create(&threads[i], NULL, ft_loop_thread, &data[i]);
-	i = 0;
-	while (i < config.count)
+	i = -1;
+	while (++i < config.count)
 	{
 		pthread_mutex_destroy(&data[i].fork_data.mutex);
 		pthread_join(threads[i], NULL);
-		i++;
 	}
 	pthread_mutex_destroy(&config.time_lock.mutex);
+	pthread_mutex_destroy(&config.mutex);
 	free(config.ate);
 	free(config.time_lock.n);
 	free(data);
