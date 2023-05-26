@@ -6,7 +6,7 @@
 /*   By: tadiyamu <tadiyamu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/25 21:11:27 by tadiyamu          #+#    #+#             */
-/*   Updated: 2023/05/26 15:06:35 by tadiyamu         ###   ########.fr       */
+/*   Updated: 2023/05/26 19:15:03 by tadiyamu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,18 +36,19 @@ static int	ft_time_lock(t_data *data, t_thread_config *config)
 	t_philo_config	*gconf;
 
 	gconf = data->config;
+	pthread_mutex_lock(&gconf->time_lock.mutex);
 	if (gconf->time_lock.now == config->now)
 	{
 		gconf->time_lock.n[data->id - 1] = 1;
 		if (ft_check_time_lock(gconf->time_lock.n, gconf->count))
 		{
-			pthread_mutex_lock(&gconf->time_lock.mutex);
 			memset(gconf->time_lock.n, 0, sizeof(int) * gconf->count);
 			gconf->time_lock.now++;
-			pthread_mutex_unlock(&gconf->time_lock.mutex);
 		}
+		pthread_mutex_unlock(&gconf->time_lock.mutex);
 		return (0);
 	}
+	pthread_mutex_unlock(&gconf->time_lock.mutex);
 	return (1);
 }
 
