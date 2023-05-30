@@ -6,7 +6,7 @@
 /*   By: tadiyamu <tadiyamu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/23 19:18:04 by tadiyamu          #+#    #+#             */
-/*   Updated: 2023/05/26 17:17:26 by tadiyamu         ###   ########.fr       */
+/*   Updated: 2023/05/29 23:17:16 by tadiyamu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@
 # include <string.h>
 # include <sys/time.h>
 
-# define PHILO_FORK " has taken fork\n"
+# define PHILO_FORK " has taken a fork\n"
 # define PHILO_EAT " is eating\n"
 # define PHILO_SLEEP " is sleeping\n"
 # define PHILO_THINK " is thinking\n"
@@ -33,6 +33,18 @@ typedef struct s_time_lock
 	pthread_mutex_t	mutex;
 }			t_time_lock;
 
+typedef struct s_ate_lock
+{
+	int				*ate;
+	int				stop_flag;
+	pthread_mutex_t	mutex;
+}			t_ate_lock;
+
+typedef struct s_print_lock
+{
+	pthread_mutex_t	mutex;
+}	t_print_lock;
+
 /*
 States:
 	1 - thinking: which is idle mode
@@ -41,16 +53,15 @@ States:
 */
 typedef struct s_philo_config
 {
-	int				stop_flag;
 	int				should_eat;
 	int				count;
-	pthread_mutex_t	mutex;
-	int				*ate;
 	long long		eat_duration;
 	long long		die_duration;
 	long long		sleep_duration;
 	long long		now;
 	t_time_lock		time_lock;
+	t_ate_lock		ate_lock;
+	t_print_lock	print_lock;
 }				t_philo_config;
 
 typedef struct s_thread_config
@@ -58,6 +69,9 @@ typedef struct s_thread_config
 	long long	state_time;
 	long long	die_time;
 	long long	now;
+	long long	eat_duration;
+	long long	die_duration;
+	long long	sleep_duration;
 	int			should_eat;
 	int			state;
 }				t_thread_config;
@@ -76,6 +90,10 @@ typedef struct s_data
 	t_philo_config	*config;
 	struct s_data	*next;
 }			t_data;
+
+size_t		ft_strlen(const unsigned char *str);
+
+void		ft_philo_print(long long time, int id, char *action, t_data *data);
 
 void		*ft_loop_thread(void *arg);
 
@@ -96,6 +114,16 @@ int			ft_check_val(char *str, long long val);
 long long	ft_atoi(char *str);
 
 int			ft_philo_parse(int argc, char **argv, t_philo_config *config);
+
+long long	ft_get_now(void);
+
+void		ft_philo_free_config(t_philo_config *config);
+
+void		ft_philo_free_data(t_philo_config *config, t_data *data);
+
+int			ft_thread_err(t_philo_config *config, t_data *data);
+
+int			ft_data_err(t_philo_config *config);
 
 #endif
 

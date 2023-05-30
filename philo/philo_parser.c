@@ -6,7 +6,7 @@
 /*   By: tadiyamu <tadiyamu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/25 21:29:53 by tadiyamu          #+#    #+#             */
-/*   Updated: 2023/05/26 14:35:14 by tadiyamu         ###   ########.fr       */
+/*   Updated: 2023/05/30 17:26:45 by tadiyamu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ static int	ft_atoi_loop(long long *vals, int argc, char **argv)
 	while (i < argc)
 	{
 		vals[i - 1] = ft_atoi(argv[i]);
-		if (vals[i - 1] < 0 || !ft_check_val(argv[i], vals[i - 1]))
+		if (vals[i - 1] <= 0 || !ft_check_val(argv[i], vals[i - 1]))
 			return (0);
 		i++;
 	}

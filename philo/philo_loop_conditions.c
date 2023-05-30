@@ -6,7 +6,7 @@
 /*   By: tadiyamu <tadiyamu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/25 21:14:11 by tadiyamu          #+#    #+#             */
-/*   Updated: 2023/05/26 18:52:26 by tadiyamu         ###   ########.fr       */
+/*   Updated: 2023/05/30 18:12:32 by tadiyamu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,7 @@
 
 int	ft_eat_condition(t_data *data, t_thread_config *config)
 {
-	if (config->state == 1 && data != data->next && data->fork_data.fork
-		&& data->next->fork_data.fork)
+	if (config->state == 1 && data != data->next)
 	{
 		if (data->config->now == config->now && data->id % 2 == 1
 			&& (data->id != data->config->count))
@@ -29,7 +28,7 @@ int	ft_eat_condition(t_data *data, t_thread_config *config)
 
 int	ft_sleep_condition(t_thread_config *config)
 {
-	if (config->state == 2 && config->now + 3 == config->state_time)
+	if (config->state == 2 && config->now == config->state_time)
 		return (1);
 	return (0);
 }
