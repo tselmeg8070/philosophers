@@ -6,7 +6,7 @@
 /*   By: tadiyamu <tadiyamu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/25 21:11:27 by tadiyamu          #+#    #+#             */
-/*   Updated: 2023/05/29 22:50:02 by tadiyamu         ###   ########.fr       */
+/*   Updated: 2023/05/31 17:48:56 by tadiyamu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,12 +89,6 @@ void	*ft_loop_thread(void *arg)
 	ft_init_loop(&config, data);
 	while (1)
 	{
-		if (ft_time_lock(data, &config))
-		{
-			ft_loop_action_caller(data, &config);
-			ft_philo_die(data, &config);
-			config.now += 1;
-		}
 		if (pthread_mutex_lock(&data->config->ate_lock.mutex) == 0)
 		{
 			if (data->config->ate_lock.stop_flag)
@@ -103,6 +97,12 @@ void	*ft_loop_thread(void *arg)
 				break ;
 			}
 			pthread_mutex_unlock(&data->config->ate_lock.mutex);
+		}
+		if (ft_time_lock(data, &config))
+		{
+			ft_loop_action_caller(data, &config);
+			ft_philo_die(data, &config);
+			config.now += 1;
 		}
 		usleep(1000);
 	}
