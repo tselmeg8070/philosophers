@@ -6,7 +6,7 @@
 /*   By: tadiyamu <tadiyamu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/25 21:10:12 by tadiyamu          #+#    #+#             */
-/*   Updated: 2023/05/31 18:02:50 by tadiyamu         ###   ########.fr       */
+/*   Updated: 2023/06/12 14:41:48 by tadiyamu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,7 @@ void	ft_philo_decide(t_data *data, t_thread_config *config)
 			ft_philo_eat(data, config);
 		else
 		{
+			ft_philo_die(data, config);
 			config->state = 1;
 			pthread_mutex_lock(&data->config->ate_lock.mutex);
 			if (data->config->ate_lock.stop_flag == 0)
